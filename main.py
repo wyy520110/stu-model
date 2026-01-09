@@ -1,15 +1,16 @@
-import PyPDF2
+# 显示代理
+from IPython.display import Image, display
+from lc.graph_api import agent
+from langchain.messages import HumanMessage
 
-reader = PyPDF2.PdfReader('./assets/浦发上海浦东发展银行西安分行个金客户经理考核办法.pdf')
+if __name__ == "__main__":
+    try:
+        display(Image(agent.get_graph(xray=True).draw_mermaid_png()))
+    except Exception as e:
+        print(f"无法显示图表: {e}")
 
-def extract_text_from_pdf(pdf_reader: PyPDF2.PdfReader):
-    page_to_text = []
-    for page_index, page in enumerate(pdf_reader.pages):
-        page_to_text.append({
-            'page': page_index,
-            'text': page.extract_text()
-        })
-    return page_to_text
-
-
-print(extract_text_from_pdf(reader))
+    # 调用
+    messages = [HumanMessage(content="3123421加43242在减45422之后乘以2等于多少。")]
+    messages = agent.invoke({"messages": messages})
+    for m in messages["messages"]:
+        m.pretty_print()
